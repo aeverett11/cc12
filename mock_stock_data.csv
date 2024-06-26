@@ -1,0 +1,67 @@
+import pandas as pd
+
+# Load the CSV file
+file_path = 'path/to/your/mock_stock_data.csv'
+data = pd.read_csv(file_path)
+
+# Display the first few rows of the dataframe to understand its structure
+print(data.head())
+
+def filter_by_stock_name(df, stock_name):
+    """
+    Filter the dataframe by stock name.
+    
+    Parameters:
+    df (pd.DataFrame): The dataframe containing stock data.
+    stock_name (str): The stock name to filter by.
+    
+    Returns:
+    pd.DataFrame: The filtered dataframe.
+    """
+    return df[df['Stock'] == stock_name]
+
+def filter_by_date_range(df, start_date, end_date):
+    """
+    Filter the dataframe by a date range.
+    
+    Parameters:
+    df (pd.DataFrame): The dataframe containing stock data.
+    start_date (str): The start date in 'YYYY-MM-DD' format.
+    end_date (str): The end date in 'YYYY-MM-DD' format.
+    
+    Returns:
+    pd.DataFrame: The filtered dataframe.
+    """
+    df['Date'] = pd.to_datetime(df['Date'])
+    mask = (df['Date'] >= start_date) & (df['Date'] <= end_date)
+    return df[mask]
+
+def filter_data(df, stock_name=None, start_date=None, end_date=None):
+    """
+    Filter the dataframe by stock name and/or date range.
+    
+    Parameters:
+    df (pd.DataFrame): The dataframe containing stock data.
+    stock_name (str): The stock name to filter by (optional).
+    start_date (str): The start date in 'YYYY-MM-DD' format (optional).
+    end_date (str): The end date in 'YYYY-MM-DD' format (optional).
+    
+    Returns:
+    pd.DataFrame: The filtered dataframe.
+    """
+    if stock_name:
+        df = filter_by_stock_name(df, stock_name)
+    if start_date and end_date:
+        df = filter_by_date_range(df, start_date, end_date)
+    return df
+# Example usage of filtering by stock name
+filtered_apple = filter_by_stock_name(data, 'Apple')
+print(filtered_apple)
+
+# Example usage of filtering by date range
+filtered_date_range = filter_by_date_range(data, '2023-01-02', '2023-01-04')
+print(filtered_date_range)
+
+# Example usage of combined filtering
+filtered_combined = filter_data(data, stock_name='Google', start_date='2023-01-02', end_date='2023-01-04')
+print(filtered_combined)
